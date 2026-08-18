@@ -9,7 +9,7 @@ git remote add origin https://github.com/mrbit4578/HOCTIENGANH.git 2>nul
 git remote set-url origin https://github.com/mrbit4578/HOCTIENGANH.git
 
 git add .
-git commit -m "fix: resolve SSR createCsrfMiddleware error for Vercel deployment"
+git commit -m "fix: switch to SPA static build for zero-error Vercel deployment"
 git branch -M main
 git push -u origin main
 
