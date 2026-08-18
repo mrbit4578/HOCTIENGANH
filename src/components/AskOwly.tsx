@@ -51,11 +51,36 @@ export function AskOwly() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState<TypingStats>(loadStats);
-  const [llmStatus, setLlmStatus] = useState<"unknown" | "on" | "off">("unknown");
+  const [llmStatus, setLlmStatus] = useState<"unknown" | "checking" | "on" | "off">("checking");
+  const [llmError, setLlmError] = useState<string | null>(null);
   const [chips, setChips] = useState<string[]>(() => pickRandom(suggestedQuestions, 4));
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const nextId = useRef(1);
+
+  // Probe LLM availability on mount
+  useEffect(() => {
+    let active = true;
+    void askLlm({ data: { question: "hi", context: "greeting" } })
+      .then((res) => {
+        if (!active) return;
+        if (res.mode === "llm") {
+          setLlmStatus("on");
+          setLlmError(null);
+        } else if (res.mode === "not-configured") {
+          setLlmStatus("off");
+        } else if (res.mode === "error") {
+          setLlmStatus("off");
+          setLlmError(res.error);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!active) return;
+        setLlmStatus("off");
+        setLlmError(err instanceof Error ? err.message : "Connection failed");
+      });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -106,11 +131,12 @@ export function AskOwly() {
               speakText: extractFirstEnglish(llmResult.text) || localAnswer.speakText,
             };
           } else {
-            // error — use local
-            if (llmStatus === "unknown") setLlmStatus("off");
+            if (llmResult.mode === "error") setLlmError(llmResult.error);
+            setLlmStatus("off");
           }
-        } catch {
-          if (llmStatus === "unknown") setLlmStatus("off");
+        } catch (err) {
+          setLlmStatus("off");
+          setLlmError(err instanceof Error ? err.message : "Error calling LLM");
         }
       }
 
@@ -156,9 +182,28 @@ export function AskOwly() {
           <Sparkles className="size-4" />
           {stats.challenges} thử thách
         </span>
-        <span className="ml-auto rounded-full bg-muted px-3 py-1 text-xs font-bold">
-          {llmStatus === "on" ? "🤖 LLM + RAG" : "🦉 Offline RAG"}
-        </span>
+        <div className="ml-auto flex items-center gap-2">
+          {llmError && (
+            <span className="text-xs text-destructive font-mono bg-destructive/10 px-2 py-0.5 rounded">
+              {llmError}
+            </span>
+          )}
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-bold ${
+              llmStatus === "on"
+                ? "bg-success/20 text-success"
+                : llmStatus === "checking"
+                ? "bg-sun/20 text-sun-foreground animate-pulse"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {llmStatus === "on"
+              ? "🤖 LLM + RAG (Online)"
+              : llmStatus === "checking"
+              ? "⏳ Đang nối AI..."
+              : "🦉 Offline RAG"}
+          </span>
+        </div>
       </div>
 
       {/* Messages */}

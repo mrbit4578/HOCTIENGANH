@@ -4,15 +4,15 @@ Write-Host "  Owly English - Dang push code len GitHub..." -ForegroundColor Cyan
 Write-Host "========================================================" -ForegroundColor Cyan
 
 git init
-git remote add origin https://github.com/mrsirom629-max/BE-HOCTIENGANH.git 2>$null
-git remote set-url origin https://github.com/mrsirom629-max/BE-HOCTIENGANH.git
+git remote add origin https://github.com/mrbit4578/HOCTIENGANH.git 2>$null
+git remote set-url origin https://github.com/mrbit4578/HOCTIENGANH.git
 
 git add .
-git commit -m "feat: Full Owly English app with RAG AI and online LLM key"
+git commit -m "feat: Push Owly English app for online deployment"
 git branch -M main
-git push -u origin main --force
+git push -u origin main
 
 Write-Host "`n========================================================" -ForegroundColor Green
 Write-Host "  DA PUSH THANH CONG LEN GITHUB!" -ForegroundColor Green
-Write-Host "  Repo: https://github.com/mrsirom629-max/BE-HOCTIENGANH" -ForegroundColor Green
+Write-Host "  Repo: https://github.com/mrbit4578/HOCTIENGANH" -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Green

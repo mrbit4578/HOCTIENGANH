@@ -18,11 +18,13 @@ type LlmResponse =
 export const askLlm = createServerFn({ method: "POST" })
   .validator((data: LlmRequest) => data)
   .handler(async ({ data }): Promise<LlmResponse> => {
-    const baseUrl = process.env["OWLY_LLM_BASE_URL"] ?? "https://api.openai.com/v1";
+    const baseUrl =
+      process.env["OWLY_LLM_BASE_URL"] ||
+      "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
     const apiKey =
       process.env["OWLY_LLM_API_KEY"] ||
       "sk-ws-H.DMPMRIH.mBqh.MEUCIE6wGmgiJ9WxsNeYqrqLMj6jthvAfePF7mCPBJll4hrQAiEAlrnDD1erj1kvOzWsJOKqHwdg7Q6EOb1LRT-9tMFJAqA";
-    const model = process.env["OWLY_LLM_MODEL"] ?? "gpt-4o-mini";
+    const model = process.env["OWLY_LLM_MODEL"] || "qwen3.8-max";
 
     if (!apiKey) {
       return { mode: "not-configured" };
@@ -61,7 +63,8 @@ Quy tắc:
       clearTimeout(timeout);
 
       if (!response.ok) {
-        return { mode: "error", error: `LLM API returned ${response.status}` };
+        const bodyText = await response.text().catch(() => "");
+        return { mode: "error", error: `HTTP ${response.status}: ${bodyText.slice(0, 150)}` };
       }
 
       const json = (await response.json()) as {
