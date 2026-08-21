@@ -21,7 +21,7 @@ export default async function handler(req: Request): Promise<Response> {
   const baseUrl =
     process.env.VITE_OWLY_LLM_BASE_URL ||
     "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
-  const model = process.env.VITE_OWLY_LLM_MODEL || "qwen3.8-max";
+  const model = process.env.VITE_OWLY_LLM_MODEL || "qwen-plus";
 
   if (!apiKey) {
     return new Response(JSON.stringify({ mode: "not-configured" }), {
