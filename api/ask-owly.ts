@@ -10,6 +10,14 @@ export const config = {
 };
 
 export default async function handler(req: Request): Promise<Response> {
+  // Quick health check for GET requests
+  if (req.method === "GET") {
+    return new Response(JSON.stringify({ status: "ok", hasKey: !!process.env.VITE_OWLY_LLM_API_KEY || !!process.env.mrbit1 || !!process.env.OWLY_LLM_API_KEY }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
       status: 405,
