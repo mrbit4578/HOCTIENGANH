@@ -3,26 +3,19 @@
  * Keeps API key on the server side.
  * URL: /api/ask-owly
  *
- * Plain JavaScript (no TypeScript types) for maximum Vercel compatibility.
+ * Uses the classic Node.js (req, res) signature for maximum compatibility.
  */
-export const config = {
-  runtime: "nodejs",
-};
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   // Quick health check for GET requests
   if (req.method === "GET") {
-    return new Response(JSON.stringify({ status: "ok", hasKey: !!process.env.VITE_OWLY_LLM_API_KEY || !!process.env.mrbit1 || !!process.env.OWLY_LLM_API_KEY }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+    return res.status(200).json({
+      status: "ok",
+      hasKey: !!process.env.VITE_OWLY_LLM_API_KEY || !!process.env.mrbit1 || !!process.env.OWLY_LLM_API_KEY,
     });
   }
 
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Method not allowed" }), {
-      status: 405,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   // Accept multiple env var names so the user doesn't need to rename on Vercel
@@ -37,15 +30,12 @@ export default async function handler(req) {
   const model = process.env.VITE_OWLY_LLM_MODEL || "qwen-plus";
 
   if (!apiKey) {
-    return new Response(JSON.stringify({ mode: "not-configured" }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(200).json({ mode: "not-configured" });
   }
 
   let body = {};
   try {
-    body = await req.json();
+    body = req.body || {};
   } catch {
     // ignore malformed body
   }
@@ -90,31 +80,21 @@ Quy tắc:
 
     if (!response.ok) {
       const errText = await response.text().catch(() => "");
-      return new Response(
-        JSON.stringify({
-          mode: "error",
-          error: `HTTP ${response.status}: ${errText.slice(0, 150)}`,
-        }),
-        { status: 200, headers: { "Content-Type": "application/json" } },
-      );
+      return res.status(200).json({
+        mode: "error",
+        error: `HTTP ${response.status}: ${errText.slice(0, 150)}`,
+      });
     }
 
     const json = await response.json();
     const text = json.choices?.[0]?.message?.content ?? "";
 
-    return new Response(JSON.stringify({ mode: "llm", text }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return res.status(200).json({ mode: "llm", text });
   } catch (err) {
     const isAbort = err instanceof Error && err.name === "AbortError";
-    return new Response(
-      JSON.stringify({
-        mode: "error",
-        error: isAbort ? "LLM request timed out" : err instanceof Error ? err.message : "Unknown error",
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
-    );
+    return res.status(200).json({
+      mode: "error",
+      error: isAbort ? "LLM request timed out" : err instanceof Error ? err.message : "Unknown error",
+    });
   }
-}
 }
