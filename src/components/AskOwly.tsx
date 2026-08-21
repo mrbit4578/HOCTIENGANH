@@ -4,7 +4,7 @@
  */
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
-import { Send, Volume2, Sparkles, Keyboard, MessageCircle, RotateCcw } from "lucide-react";
+import { Send, Volume2, Sparkles, Keyboard, MessageCircle, RotateCcw, Play, Square } from "lucide-react";
 import { retrieve } from "@/lib/rag/retriever";
 import { composeAnswer, type Answer } from "@/lib/rag/answerer";
 import { suggestedQuestions } from "@/lib/rag/knowledge";
@@ -238,6 +238,11 @@ export function AskOwly() {
                     </button>
                   )}
 
+                  {/* Speak words — bé bấm từng từ để nghe riêng */}
+                  {msg.answer.speakText && msg.answer.speakText.split(" ").length > 1 && (
+                    <SpeakWords text={msg.answer.speakText} />
+                  )}
+
                   {/* Source chips */}
                   {msg.answer.sources.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
@@ -444,4 +449,84 @@ function pickRandom<T>(arr: T[], n: number): T[] {
 function extractFirstEnglish(text: string): string {
   const match = text.match(/"([A-Z][^"]*[.!?])"/);
   return match ? match[1]! : "";
+}
+
+// ── SpeakWords: tách câu thành từng từ, bé bấm từ nào nghe từ đó ────────
+
+/** Tách câu tiếng Anh thành từng từ, giữ nguyên dấu câu. */
+function splitWords(text: string): string[] {
+  return text
+    .replace(/([.,!?;:'"()])/g, " $1 ")
+    .split(/\s+/)
+    .filter((w) => w.length > 0);
+}
+
+/** Component: hiển thị câu dạng từng từ, bấm để nghe phát âm riêng. */
+function SpeakWords({ text }: { text: string }) {
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [playingAll, setPlayingAll] = useState(false);
+  const words = splitWords(text);
+  const cancelRef = useRef(false);
+
+  const speakWord = (word: string, idx: number) => {
+    cancelRef.current = true;
+    setActiveIdx(idx);
+    speak(word, { rate: 0.7 });
+    // Reset highlight after a short delay (approximate word duration)
+    setTimeout(() => setActiveIdx(null), Math.max(600, word.length * 120));
+  };
+
+  const speakAll = async () => {
+    if (playingAll) {
+      cancelRef.current = true;
+      setPlayingAll(false);
+      setActiveIdx(null);
+      return;
+    }
+    cancelRef.current = false;
+    setPlayingAll(true);
+    for (let i = 0; i < words.length; i++) {
+      if (cancelRef.current) break;
+      setActiveIdx(i);
+      speak(words[i]!, { rate: 0.7 });
+      // Wait roughly proportional to word length
+      await new Promise((r) => setTimeout(r, Math.max(500, words[i]!.length * 100)));
+    }
+    setPlayingAll(false);
+    setActiveIdx(null);
+  };
+
+  return (
+    <div className="mt-2 rounded-xl border-2 border-dashed border-sky bg-sky/10 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-bold text-sky">
+          🔊 Bấm vào từng từ để nghe phát âm riêng:
+        </p>
+        <button
+          type="button"
+          onClick={() => void speakAll()}
+          className="inline-flex items-center gap-1 rounded-full border-2 border-sky bg-sky/20 px-2.5 py-0.5 text-xs font-bold text-sky transition-colors hover:bg-sky/30"
+        >
+          {playingAll ? <Square className="size-3" /> : <Play className="size-3" />}
+          {playingAll ? "Dừng" : "Đọc hết"}
+        </button>
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {words.map((w, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => speakWord(w, i)}
+            className={`rounded-lg px-2 py-1 font-display text-sm font-bold transition-all ${
+              activeIdx === i
+                ? "scale-110 bg-sky text-sky-foreground shadow-pop"
+                : "bg-card text-foreground hover:bg-sky/20"
+            }`}
+          >
+            {w}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
