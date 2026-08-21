@@ -14,7 +14,10 @@ function llmProxyPlugin(): Plugin {
   return {
     name: "owly-llm-proxy",
     config(_, { mode }) {
-      env = loadEnv(mode, process.cwd(), "");
+      // Use the directory of this config file (not process.cwd()) so the
+      // .env is found even when Vite is launched from a parent directory.
+      const root = import.meta.dirname;
+      env = loadEnv(mode, root, "");
     },
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
