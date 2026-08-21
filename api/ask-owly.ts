@@ -47,7 +47,10 @@ Quy tắc:
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    // Vercel serverless functions have a default 10s timeout on the free
+    // plan. Use a shorter internal timeout so we return a graceful error
+    // instead of FUNCTION_INVOCATION_TIMEOUT.
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     const response = await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
@@ -93,10 +96,11 @@ Quy tắc:
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {
+    const isAbort = err instanceof Error && err.name === "AbortError";
     return new Response(
       JSON.stringify({
         mode: "error",
-        error: err instanceof Error ? err.message : "Unknown error",
+        error: isAbort ? "LLM request timed out" : err instanceof Error ? err.message : "Unknown error",
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
