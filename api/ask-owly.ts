@@ -17,7 +17,12 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
-  const apiKey = process.env.VITE_OWLY_LLM_API_KEY || "";
+  // Accept multiple env var names so the user doesn't need to rename on Vercel
+  const apiKey =
+    process.env.VITE_OWLY_LLM_API_KEY ||
+    process.env.mrbit1 ||
+    process.env.OWLY_LLM_API_KEY ||
+    "";
   const baseUrl =
     process.env.VITE_OWLY_LLM_BASE_URL ||
     "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
