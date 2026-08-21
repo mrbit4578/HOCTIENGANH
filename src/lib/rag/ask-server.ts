@@ -3,6 +3,9 @@
  * The proxy (Vite dev middleware or Vercel serverless function) forwards
  * the request to DashScope/Qwen API without exposing the key to the browser.
  *
+ * The proxy itself checks if the API key is configured and returns
+ * { mode: "not-configured" } if not — so the client always calls it.
+ *
  * Falls back gracefully when not configured or offline.
  */
 
@@ -17,12 +20,6 @@ type LlmResponse =
   | { mode: "error"; error: string };
 
 export async function askLlm({ data }: { data: LlmRequest }): Promise<LlmResponse> {
-  // No API key in env → skip the network call entirely
-  const hasKey = import.meta.env.VITE_OWLY_LLM_API_KEY;
-  if (!hasKey) {
-    return { mode: "not-configured" };
-  }
-
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 25000);

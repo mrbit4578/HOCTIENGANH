@@ -1,4 +1,4 @@
-import type { Plugin } from "vite";
+import { loadEnv, type Plugin } from "vite";
 
 /**
  * Vite plugin: proxy /api/ask-owly → DashScope/Qwen LLM API
@@ -7,12 +7,30 @@ import type { Plugin } from "vite";
  * In production (Vercel), use /api/ask-owly.ts serverless function instead.
  */
 export function llmProxyPlugin(): Plugin {
+  let env: Record<string, string> = {};
+
   return {
     name: "owly-llm-proxy",
+    config(_, { mode }) {
+      // Load .env variables into the plugin — Vite doesn't put them
+      // into process.env for server-side code, only into import.meta.env
+      // for the client. We must use loadEnv to access them here.
+      env = loadEnv(mode, process.cwd(), "");
+    },
     configureServer(server) {
-      server.middlewares.use("/api/ask-owly", async (req, res) => {
+      // Register middleware BEFORE Vite's internal handlers so /api/* is
+      // intercepted before the SPA fallback catches everything.
+      server.middlewares.use(async (req, res, next) => {
+        // Only handle /api/ask-owly — check both url and originalUrl
+        // because Vite may rewrite req.url for the SPA fallback
+        const url = req.url ?? req.originalUrl ?? "";
+        if (!url.includes("/api/ask-owly")) {
+          return next();
+        }
+
         if (req.method !== "POST") {
           res.statusCode = 405;
+          res.setHeader("Content-Type", "application/json");
           res.end(JSON.stringify({ error: "Method not allowed" }));
           return;
         }
@@ -24,11 +42,11 @@ export function llmProxyPlugin(): Plugin {
           }
           const body = JSON.parse(Buffer.concat(chunks).toString());
 
-          const apiKey = process.env.VITE_OWLY_LLM_API_KEY || "";
+          const apiKey = env.VITE_OWLY_LLM_API_KEY || "";
           const baseUrl =
-            process.env.VITE_OWLY_LLM_BASE_URL ||
+            env.VITE_OWLY_LLM_BASE_URL ||
             "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
-          const model = process.env.VITE_OWLY_LLM_MODEL || "qwen3.8-max";
+          const model = env.VITE_OWLY_LLM_MODEL || "qwen3.8-max";
 
           if (!apiKey) {
             res.statusCode = 200;
