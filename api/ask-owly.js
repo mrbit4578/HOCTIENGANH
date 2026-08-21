@@ -3,13 +3,13 @@
  * Keeps API key on the server side.
  * URL: /api/ask-owly
  *
- * Uses the modern Web API (Request/Response) signature required by Vercel.
+ * Plain JavaScript (no TypeScript types) for maximum Vercel compatibility.
  */
 export const config = {
   runtime: "nodejs",
 };
 
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(req) {
   // Quick health check for GET requests
   if (req.method === "GET") {
     return new Response(JSON.stringify({ status: "ok", hasKey: !!process.env.VITE_OWLY_LLM_API_KEY || !!process.env.mrbit1 || !!process.env.OWLY_LLM_API_KEY }), {
@@ -43,9 +43,9 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
-  let body: { question?: string; context?: string } = {};
+  let body = {};
   try {
-    body = (await req.json()) as { question?: string; context?: string };
+    body = await req.json();
   } catch {
     // ignore malformed body
   }
@@ -99,9 +99,7 @@ Quy tắc:
       );
     }
 
-    const json = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
+    const json = await response.json();
     const text = json.choices?.[0]?.message?.content ?? "";
 
     return new Response(JSON.stringify({ mode: "llm", text }), {
@@ -118,4 +116,5 @@ Quy tắc:
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   }
+}
 }
