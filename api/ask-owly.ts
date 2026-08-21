@@ -2,16 +2,19 @@
  * Vercel Serverless Function — proxy LLM API
  * Keeps API key on the server side.
  * URL: /api/ask-owly
+ *
+ * Uses the modern Web API (Request/Response) signature required by Vercel.
  */
-export default async function handler(req: {
-  method: string;
-  body: { question: string; context: string };
-}) {
+export const config = {
+  runtime: "nodejs",
+};
+
+export default async function handler(req: Request): Promise<Response> {
   if (req.method !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method not allowed" }),
-    };
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const apiKey = process.env.VITE_OWLY_LLM_API_KEY || "";
@@ -21,11 +24,17 @@ export default async function handler(req: {
   const model = process.env.VITE_OWLY_LLM_MODEL || "qwen3.8-max";
 
   if (!apiKey) {
-    return {
-      statusCode: 200,
+    return new Response(JSON.stringify({ mode: "not-configured" }), {
+      status: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mode: "not-configured" }),
-    };
+    });
+  }
+
+  let body: { question?: string; context?: string } = {};
+  try {
+    body = (await req.json()) as { question?: string; context?: string };
+  } catch {
+    // ignore malformed body
   }
 
   const systemPrompt = `Bạn là Cô Owly 🦉, trợ lý dạy tiếng Anh cho trẻ em 6-12 tuổi Việt Nam.
@@ -52,7 +61,7 @@ Quy tắc:
           { role: "system", content: systemPrompt },
           {
             role: "user",
-            content: `Ngữ cảnh từ giáo trình:\n${req.body?.context || ""}\n\nCâu hỏi của bé: ${req.body?.question || ""}`,
+            content: `Ngữ cảnh từ giáo trình:\n${body.context || ""}\n\nCâu hỏi của bé: ${body.question || ""}`,
           },
         ],
         max_tokens: 200,
@@ -65,14 +74,13 @@ Quy tắc:
 
     if (!response.ok) {
       const errText = await response.text().catch(() => "");
-      return {
-        statusCode: 200,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      return new Response(
+        JSON.stringify({
           mode: "error",
           error: `HTTP ${response.status}: ${errText.slice(0, 150)}`,
         }),
-      };
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
     }
 
     const json = (await response.json()) as {
@@ -80,19 +88,17 @@ Quy tắc:
     };
     const text = json.choices?.[0]?.message?.content ?? "";
 
-    return {
-      statusCode: 200,
+    return new Response(JSON.stringify({ mode: "llm", text }), {
+      status: 200,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mode: "llm", text }),
-    };
+    });
   } catch (err) {
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    return new Response(
+      JSON.stringify({
         mode: "error",
         error: err instanceof Error ? err.message : "Unknown error",
       }),
-    };
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
   }
 }
