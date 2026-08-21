@@ -28,5 +28,10 @@ dist-ssr
 *.suo
 *.ntvs*
 *.njsproj
+
+# Environment variables (contains API keys — NEVER commit)
+.env
+.env.*
+!.env.example
 *.sln
 *.sw?

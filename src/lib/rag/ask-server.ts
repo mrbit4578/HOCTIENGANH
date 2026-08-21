@@ -1,7 +1,9 @@
 /**
- * LLM client — calls DashScope/Qwen API directly from the browser.
- * API key is read from import.meta.env (VITE_OWLY_LLM_*).
- * Falls back gracefully when not configured.
+ * LLM client — calls server proxy /api/ask-owly to keep API key secure.
+ * The proxy (Vite dev middleware or Vercel serverless function) forwards
+ * the request to DashScope/Qwen API without exposing the key to the browser.
+ *
+ * Falls back gracefully when not configured or offline.
  */
 
 type LlmRequest = {
@@ -15,42 +17,22 @@ type LlmResponse =
   | { mode: "error"; error: string };
 
 export async function askLlm({ data }: { data: LlmRequest }): Promise<LlmResponse> {
-  const baseUrl =
-    import.meta.env.VITE_OWLY_LLM_BASE_URL ||
-    "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
-  const apiKey = import.meta.env.VITE_OWLY_LLM_API_KEY || "";
-  const model = import.meta.env.VITE_OWLY_LLM_MODEL || "qwen3.8-max";
-
-  if (!apiKey) {
+  // No API key in env → skip the network call entirely
+  const hasKey = import.meta.env.VITE_OWLY_LLM_API_KEY;
+  if (!hasKey) {
     return { mode: "not-configured" };
   }
 
-  const systemPrompt = `Bạn là Cô Owly 🦉, trợ lý dạy tiếng Anh cho trẻ em 6-12 tuổi Việt Nam.
-Quy tắc:
-- Trả lời tối đa 80 từ, dùng tiếng Anh đơn giản + giải thích tiếng Việt.
-- KHÔNG bịa thông tin ngoài ngữ cảnh được cung cấp.
-- Nếu không biết, nói thẳng "Cô chưa có thông tin về điều này".
-- An toàn cho trẻ em, thân thiện, khích lệ.
-- Luôn gắn ví dụ tiếng Anh trong dấu ngoặc kép.`;
-
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 20000);
+    const timeout = setTimeout(() => controller.abort(), 25000);
 
-    const response = await fetch(`${baseUrl}/chat/completions`, {
+    const response = await fetch("/api/ask-owly", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Ngữ cảnh từ giáo trình:\n${data.context}\n\nCâu hỏi của bé: ${data.question}` },
-        ],
-        max_tokens: 200,
-        temperature: 0.3,
+        question: data.question,
+        context: data.context,
       }),
       signal: controller.signal,
     });
@@ -58,16 +40,10 @@ Quy tắc:
     clearTimeout(timeout);
 
     if (!response.ok) {
-      const bodyText = await response.text().catch(() => "");
-      return { mode: "error", error: `HTTP ${response.status}: ${bodyText.slice(0, 150)}` };
+      return { mode: "error", error: `HTTP ${response.status}` };
     }
 
-    const json = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const text = json.choices?.[0]?.message?.content ?? "";
-
-    return { mode: "llm", text };
+    return (await response.json()) as LlmResponse;
   } catch (err) {
     return { mode: "error", error: err instanceof Error ? err.message : "Unknown error" };
   }

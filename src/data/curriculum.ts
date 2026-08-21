@@ -61,7 +61,10 @@ export const levels = [
     months: "Tháng 4–11",
     words: "~500 từ",
     goal: "Hiểu và dùng từ, cụm từ quen thuộc hằng ngày",
-    exam: "Listening 20 phút · R&W 20 phút · Speaking 3–5 phút",
+    exam: "Listening 20 phút (20 câu) · R&W 20 phút (25 câu) · Speaking 3–5 phút",
+    totalItems: "45 câu hỏi · Tổng ~45 phút",
+    cefr: "Pre A1",
+    canDo: "Hiểu bảng chữ cái khi nghe, hiểu hướng dẫn ngắn, trả lời câu hỏi đơn giản về bản thân",
   },
   {
     id: "movers",
@@ -70,7 +73,10 @@ export const levels = [
     months: "Tháng 12–20",
     words: "~1.200–1.500 từ",
     goal: "Giao tiếp cơ bản, kể lại chuyện tranh đơn giản",
-    exam: "Listening 25 phút · R&W 30 phút · Speaking 5–7 phút",
+    exam: "Listening 25 phút (25 câu) · R&W 30 phút (35 câu) · Speaking 5–7 phút",
+    totalItems: "60 câu hỏi · Tổng ~1 giờ 2 phút",
+    cefr: "A1",
+    canDo: "Hiểu hội thoại quen thuộc, đọc truyện ngắn có tranh, viết câu đơn về sở thích",
   },
   {
     id: "flyers",
@@ -79,38 +85,45 @@ export const levels = [
     months: "Tháng 21–30",
     words: "~2.200–2.500 từ",
     goal: "Mô tả, kể chuyện, viết đoạn ngắn, chủ động đặt câu hỏi",
-    exam: "Listening 25 phút · R&W 40 phút · Speaking 7–9 phút",
+    exam: "Listening 25 phút (25 câu) · R&W 40 phút (44 câu) · Speaking 7–9 phút",
+    totalItems: "69 câu hỏi · Tổng ~1 giờ 14 phút",
+    cefr: "A2",
+    canDo: "Hiểu câu chuyện có thì quá khứ, viết câu chuyện ngắn từ tranh, hỏi–đáp chủ động",
   },
 ] as const;
 
 export const roadmap = [
   {
-    phase: "GĐ 0 — Nền móng",
+    phase: "GĐ 0 — Nền móng (Phonics)",
     emoji: "🌰",
-    time: "2–3 tháng",
-    focus: "Phonics 44 âm, 100 sight words, 150–200 từ vựng chủ đề",
-    output: "Đọc trơn từ CVC, nghe hiểu hướng dẫn lớp học",
+    time: "2–3 tháng (tháng 1–3)",
+    focus: "Phonics 44 âm, 100 sight words, 150–200 từ vựng chủ đề (Animals, Body, Colours, Food, Home, Toys)",
+    output: "Đọc trơn từ CVC, nghe hiểu hướng dẫn lớp học, viết bảng chữ cái",
+    books: "Oxford Phonics World 1–5 · Oxford Reading Tree cấp 1–2",
   },
   {
     phase: "GĐ 1 — Starters",
     emoji: "🌱",
-    time: "6–8 tháng",
-    focus: "Đủ 500 từ Starters + 4 kỹ năng nền",
-    output: "Thi Starters, mục tiêu 12–15 khiên",
+    time: "6–8 tháng (tháng 4–11)",
+    focus: "Đủ ~500 từ Starters + ngữ pháp: Present simple, Present continuous, Can, Have got, This is/These are, a/an, số nhiều",
+    output: "Thi Starters (Listening 20' + R&W 20' + Speaking 3–5'), mục tiêu 12–15 khiên",
+    books: "Family and Friends 1–2 · Kid's Box 1–2 · Fun for Starters (4 tháng cuối)",
   },
   {
     phase: "GĐ 2 — Movers",
     emoji: "🌿",
-    time: "7–9 tháng",
-    focus: "+700 từ, thì quá khứ, kể chuyện tranh",
-    output: "Thi Movers, mục tiêu 12–15 khiên",
+    time: "7–9 tháng (tháng 12–20)",
+    focus: "+~700 từ Movers + ngữ pháp mới: Past simple, Comparatives/Superlatives, Must, Shall, Could, Relative clauses (who/which/where), Verb+inf/ing",
+    output: "Thi Movers (Listening 25' + R&W 30' + Speaking 5–7'), mục tiêu 12–15 khiên",
+    books: "Family and Friends 2–3 · Kid's Box 3–4 · Fun for Movers (5 tháng cuối)",
   },
   {
     phase: "GĐ 3 — Flyers",
     emoji: "🌳",
-    time: "8–10 tháng",
-    focus: "+1.000 từ, viết đoạn, hỏi–đáp chủ động",
-    output: "Thi Flyers, mục tiêu 12–15 khiên",
+    time: "8–10 tháng (tháng 21–30)",
+    focus: "+~1.000 từ Flyers + ngữ pháp mới: Past continuous, Present perfect, Will, May/Might, Should, Tag questions, If clauses, Be going to, Be made of",
+    output: "Thi Flyers (Listening 25' + R&W 40' + Speaking 7–9'), mục tiêu 12–15 khiên",
+    books: "Family and Friends 4–5 · Kid's Box 5–6 · Fun for Flyers (6 tháng cuối) · Authentic Practice Tests (8 tuần cuối)",
   },
 ];
 
@@ -1090,6 +1103,523 @@ export const lessons: Lesson[] = [
 ];
 
 export const getLesson = (slug: string) => lessons.find((l) => l.slug === slug);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DỮ LIỆU CHÍNH THỨC TỪ CAMBRIDGE — trích từ PDF wordlist 2025 & handbook 2024
+// Nguồn: 506166-starters-movers-flyers-word-list-2025.pdf
+//        357180-starters-movers-and-flyers-handbook-for-teachers-2024.pdf
+//        396158/396159/396160 — Picture Books (Starters/Movers/Flyers)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── CẤU TRÚC ĐỀ THI CHÍNH XÁC (Handbook 2024, page 8) ────────────────────────
+
+export type ExamPart = {
+  part: number;
+  questions: number;
+  marks: number;
+  taskType: string;
+  description: string;
+};
+
+export type ExamStructure = {
+  level: string;
+  paper: string;
+  duration: string;
+  parts: ExamPart[];
+  totalMarks: number;
+};
+
+export const examStructures: ExamStructure[] = [
+  // ── Pre A1 Starters ──────────────────────────────────────────────────────
+  {
+    level: "Pre A1 Starters",
+    paper: "Listening",
+    duration: "approx 20 mins",
+    totalMarks: 20,
+    parts: [
+      { part: 1, questions: 5, marks: 5, taskType: "Matching", description: "Draw lines to match names to people in a picture." },
+      { part: 2, questions: 5, marks: 5, taskType: "Note-taking", description: "Write numbers and names in gaps." },
+      { part: 3, questions: 5, marks: 5, taskType: "3-option multiple choice", description: "Tick correct box under pictures." },
+      { part: 4, questions: 5, marks: 5, taskType: "Colouring", description: "Carry out instructions, locate objects, and colour correctly. (Colours: black, blue, brown, green, grey, orange, pink, purple, red, yellow)" },
+    ],
+  },
+  {
+    level: "Pre A1 Starters",
+    paper: "Reading and Writing",
+    duration: "20 mins",
+    totalMarks: 25,
+    parts: [
+      { part: 1, questions: 5, marks: 5, taskType: "True/false vocabulary recognition", description: "Tick or cross to show if sentence is true or false." },
+      { part: 2, questions: 5, marks: 5, taskType: "Reading comprehension based on a picture", description: "Write 'yes'/'no' to show if sentence is correct or not." },
+      { part: 3, questions: 5, marks: 5, taskType: "Spelling", description: "Write words by unscrambling the letters." },
+      { part: 4, questions: 5, marks: 5, taskType: "Multiple-choice cloze", description: "Choose and copy missing words." },
+      { part: 5, questions: 5, marks: 5, taskType: "Answer questions based on a picture story", description: "Write one-word answers to questions." },
+    ],
+  },
+  {
+    level: "Pre A1 Starters",
+    paper: "Speaking",
+    duration: "3-5 mins",
+    totalMarks: 0,
+    parts: [
+      { part: 1, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Point to the correct part of the big picture." },
+      { part: 2, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Point to objects on a small picture card and answer questions." },
+      { part: 3, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Answer personal questions (name, age, favourite things)." },
+      { part: 4, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Answer questions about the picture card from Part 2." },
+    ],
+  },
+  // ── A1 Movers ────────────────────────────────────────────────────────────
+  {
+    level: "A1 Movers",
+    paper: "Listening",
+    duration: "approx 25 mins",
+    totalMarks: 25,
+    parts: [
+      { part: 1, questions: 5, marks: 5, taskType: "Matching", description: "Draw lines to match names to people in a picture." },
+      { part: 2, questions: 5, marks: 5, taskType: "Note-taking", description: "Write words or numbers in gaps." },
+      { part: 3, questions: 5, marks: 5, taskType: "3-option multiple choice", description: "Tick correct box under pictures." },
+      { part: 4, questions: 5, marks: 5, taskType: "Matching", description: "Match pictures with illustrated word or name by writing letter in box." },
+      { part: 5, questions: 5, marks: 5, taskType: "Colouring", description: "Carry out instructions, locate objects, and colour correctly." },
+    ],
+  },
+  {
+    level: "A1 Movers",
+    paper: "Reading and Writing",
+    duration: "30 mins",
+    totalMarks: 35,
+    parts: [
+      { part: 1, questions: 6, marks: 6, taskType: "Matching", description: "Match words to definitions. Write one word next to each definition." },
+      { part: 2, questions: 5, marks: 5, taskType: "Continuous dialogue with multiple-choice responses", description: "Complete a continuous dialogue by choosing the correct response (A–H)." },
+      { part: 3, questions: 7, marks: 7, taskType: "Gapped text", description: "Read a short narrative and choose the correct word to complete the gaps. Choose the best title." },
+      { part: 4, questions: 5, marks: 5, taskType: "Multiple-choice cloze", description: "Read a gapped factual text. Choose the correct word from a choice of three." },
+      { part: 5, questions: 7, marks: 7, taskType: "Sentence completion based on a story", description: "Read a story and complete sentences by writing 1, 2, 3 or 4 words." },
+      { part: 6, questions: 5, marks: 5, taskType: "Open cloze", description: "Read a short text and complete the gaps with own words. No answer options given." },
+    ],
+  },
+  {
+    level: "A1 Movers",
+    paper: "Speaking",
+    duration: "5-7 mins",
+    totalMarks: 0,
+    parts: [
+      { part: 1, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Find the differences between two pictures." },
+      { part: 2, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Tell a simple story based on four pictures." },
+      { part: 3, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Identify the odd one out in four sets of pictures and say why." },
+      { part: 4, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Answer personal questions (school, weekends, friends, hobbies)." },
+    ],
+  },
+  // ── A2 Flyers ────────────────────────────────────────────────────────────
+  {
+    level: "A2 Flyers",
+    paper: "Listening",
+    duration: "approx 25 mins",
+    totalMarks: 25,
+    parts: [
+      { part: 1, questions: 5, marks: 5, taskType: "Matching", description: "Draw lines to match names to people in a picture." },
+      { part: 2, questions: 5, marks: 5, taskType: "Note-taking", description: "Write words or numbers in gaps." },
+      { part: 3, questions: 5, marks: 5, taskType: "Matching", description: "Match pictures with illustrated word or name by writing letter in box." },
+      { part: 4, questions: 5, marks: 5, taskType: "3-option multiple choice", description: "Tick correct box under pictures." },
+      { part: 5, questions: 5, marks: 5, taskType: "Colouring and writing", description: "Carry out instructions, locate objects, colour correctly and write. (Colours: black, blue, brown, green, grey, orange, pink, purple, red, yellow)" },
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    paper: "Reading and Writing",
+    duration: "40 mins",
+    totalMarks: 48,
+    parts: [
+      { part: 1, questions: 10, marks: 10, taskType: "Matching words to definitions", description: "Read definitions and choose and copy the correct word next to them." },
+      { part: 2, questions: 5, marks: 5, taskType: "Continuous dialogue with multiple-choice responses", description: "Complete a continuous dialogue by choosing the correct response (A–H)." },
+      { part: 3, questions: 6, marks: 6, taskType: "Gapped text", description: "Read a short narrative and choose the correct word to complete the gaps. Choose the best title." },
+      { part: 4, questions: 10, marks: 10, taskType: "Multiple-choice cloze", description: "Read a gapped factual text. Choose the correct word from a choice of three." },
+      { part: 5, questions: 7, marks: 7, taskType: "Sentence completion based on a story", description: "Read a story and complete sentences by writing 1, 2, 3 or 4 words." },
+      { part: 6, questions: 5, marks: 5, taskType: "Open cloze", description: "Read a short text and complete the gaps with own words. No answer options given." },
+      { part: 7, questions: 1, marks: 5, taskType: "Productive writing", description: "Write a short story based on three pictures. 20+ words." },
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    paper: "Speaking",
+    duration: "7-9 mins",
+    totalMarks: 0,
+    parts: [
+      { part: 1, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Identify six differences between two similar pictures." },
+      { part: 2, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Answer and ask questions about two people, objects or situations." },
+      { part: 3, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Describe each picture in a sequence of five pictures." },
+      { part: 4, questions: 0, marks: 0, taskType: "Interlocutor–candidate", description: "Answer personal questions (school, holidays, birthdays, family, hobbies)." },
+    ],
+  },
+];
+
+// ── GRAMMAR & STRUCTURES LIST (Handbook 2024, pages 29, 52, 77) ─────────────
+
+export type GrammarStructure = {
+  category: string;
+  structure: string;
+  example: string;
+};
+
+export type GrammarList = {
+  level: string;
+  note: string;
+  items: GrammarStructure[];
+};
+
+export const grammarLists: GrammarList[] = [
+  {
+    level: "Pre A1 Starters",
+    note: "Danh sách ngữ pháp và cấu trúc cơ bản cho cấp Starters.",
+    items: [
+      { category: "Nouns", structure: "Singular and plural including irregular plural forms, countable and uncountable and names", example: "Would you like an orange? / Lemons are yellow. / Pat has six mice. / I eat rice for lunch. / Nora is my friend." },
+      { category: "Adjectives", structure: "Including possessive adjectives", example: "He's a small boy. / His name is Yusef." },
+      { category: "Determiners", structure: "a / an / the / some / these", example: "It's a banana. / This is an apple. / Put the hat on the boy's head. / I want some milk. / These books are blue." },
+      { category: "Pronouns", structure: "Including demonstrative, personal, and possessive interrogative pronouns and 'one'", example: "This is my car. / Can you see me? / Which is Anna? / Yes, please. I'd like one. / This is mine! / Is that yours?" },
+      { category: "Verbs", structure: "Present simple (positive, negative, question, imperative and short-answer forms, including contractions)", example: "Nick is happy. / I don't like eggs. / Eat your lunch! / Is that your sister? Yes, it is." },
+      { category: "Verbs", structure: "Present continuous (not with future reference)", example: "What are you doing? / The cat's sleeping." },
+      { category: "Verbs", structure: "Can for ability", example: "The baby can wave." },
+      { category: "Verbs", structure: "Can for requests/permission", example: "Can I have some birthday cake?" },
+      { category: "Verbs", structure: "Have (got) for possession", example: "Have you got a pen? / She hasn't got a dog." },
+      { category: "Adverbs", structure: "now / here / too", example: "I'm colouring it now. / My grandma lives here. / She lives here too." },
+      { category: "Conjunctions", structure: "and", example: "I've got a pen and a pencil." },
+      { category: "Prepositions of place and time", structure: "in / on / at / under / next to / behind / between / in front of", example: "Put the clock next to the picture. / We go to school in the morning." },
+      { category: "Question words", structure: "Who / Where / How / How many / How old", example: "Who is that man? / Where is Alex?" },
+      { category: "Impersonal you", structure: "How do you spell that?", example: "How do you spell that?" },
+      { category: "Have + obj + inf", structure: "Lucy has a book to read.", example: "Lucy has a book to read." },
+      { category: "ing forms as nouns", structure: "Swimming is good.", example: "Swimming is good." },
+    ],
+  },
+  {
+    level: "A1 Movers",
+    note: "Danh sách ngữ pháp MỚI ở cấp Movers (cộng dồn với Starters).",
+    items: [
+      { category: "Indirect objects", structure: "Give it to the teacher!", example: "Give it to the teacher!" },
+      { category: "Comparative and superlative adjectives", structure: "bigger than / the best", example: "Your house is bigger than mine. / Anna is my best friend." },
+      { category: "Verbs", structure: "Past simple regular and irregular forms", example: "We went to the park yesterday. / Her father cooked lunch on Friday. / Did you go to the cinema? Yes, I did. / We didn't see the pirate at the party." },
+      { category: "Verbs", structure: "Verb + infinitive", example: "I want to go home. / He started to laugh." },
+      { category: "Verbs", structure: "Verb + ing", example: "I went riding on Saturday." },
+      { category: "Verbs", structure: "Infinitive of purpose", example: "She went to town to buy a toothbrush." },
+      { category: "Verbs", structure: "Want/ask someone to do something", example: "He wants the teacher to tell a story." },
+      { category: "Verbs", structure: "Must for obligation / mustn't", example: "He must do his homework. / You mustn't give the rabbit cheese. / Must I get up now?" },
+      { category: "Verbs", structure: "Have (got) to / had to", example: "I've got to go. / Do I have to go to bed now? / He had to draw a whale for homework." },
+      { category: "Verbs", structure: "Shall for offers", example: "Shall I help you wash the car, Mum?" },
+      { category: "Verbs", structure: "Could (past form of can)", example: "I could see some birds in the tree." },
+      { category: "Adverbs", structure: "never / loudly / a lot / more quickly than / best", example: "She never eats meat. / He sang loudly. / My brother reads more quickly than my sister. / I like ice cream best." },
+      { category: "Conjunctions", structure: "because", example: "I went home because I was tired." },
+      { category: "Prepositions of time", structure: "after / on (days)", example: "She plays with her friends after school. / He plays badminton on Saturdays." },
+      { category: "Question words", structure: "Why / When", example: "Why is he talking to her? / When does school start?" },
+      { category: "Relative clauses", structure: "who / which / where", example: "Vicky is the girl who is riding a bike. / That is the DVD which my friend gave me. / This is the house where my friend lives." },
+      { category: "What is/was the weather like?", structure: "What was the weather like last weekend?", example: "What was the weather like last weekend?" },
+      { category: "What's the matter?", structure: "What's the matter? + body part + ache", example: "What's the matter, Daisy? Have you got a stomach-ache?" },
+      { category: "How/What about + n or ing", structure: "How about going to the cinema?", example: "How about going to the cinema on Wednesday afternoon?" },
+      { category: "When clauses (not with future meaning)", structure: "When he got home, he had his dinner.", example: "When he got home, he had his dinner." },
+      { category: "Go for a + n", structure: "go for a drive / walk / swim", example: "Yesterday we went for a drive in my brother's new car." },
+      { category: "Be called + n", structure: "A baby cat is called a kitten.", example: "A baby cat is called a kitten." },
+      { category: "Be good at + n", structure: "She's very good at basketball.", example: "She's very good at basketball." },
+      { category: "I think/know ...", structure: "I think he's very nice.", example: "I think he's very nice." },
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    note: "Danh sách ngữ pháp MỚI ở cấp Flyers (cộng dồn với Starters + Movers).",
+    items: [
+      { category: "Verbs", structure: "Past continuous (for interrupted actions and background setting)", example: "I was walking down the road when I saw her. / It was a very cold day and snow was falling." },
+      { category: "Verbs", structure: "Present perfect", example: "Have you ever been to the circus? / He's just eaten his dinner." },
+      { category: "Verbs", structure: "Be going to", example: "It isn't going to rain today." },
+      { category: "Verbs", structure: "Will", example: "Will you do your homework this evening? / I won't buy her a CD because she doesn't like music." },
+      { category: "Verbs", structure: "Might", example: "Vicky might come to the party." },
+      { category: "Verbs", structure: "May", example: "The bus may not come today because there is a lot of snow." },
+      { category: "Verbs", structure: "Shall for suggestions", example: "Shall we have a picnic in the park?" },
+      { category: "Verbs", structure: "Could (for possibility)", example: "You could invite Robert to the football game." },
+      { category: "Verbs", structure: "Should", example: "Should we take a towel to the swimming pool?" },
+      { category: "Verbs", structure: "Tag questions", example: "That's John's book, isn't it?" },
+      { category: "Adverbs", structure: "yet", example: "I haven't bought my brother's birthday present yet." },
+      { category: "Conjunctions", structure: "so", example: "I didn't want to walk home so I went on the bus." },
+      { category: "If clauses (in zero conditionals)", structure: "If it's sunny, we go swimming.", example: "If it's sunny, we go swimming." },
+      { category: "Where clauses", structure: "My grandmother has forgotten where she put her glasses.", example: "My grandmother has forgotten where she put her glasses." },
+      { category: "Before/after clauses (not with future reference)", structure: "I finished my homework before I played football.", example: "I finished my homework before I played football." },
+      { category: "Be/look/sound/feel/taste/smell like", structure: "What's your new teacher like? / That sounds like the baby upstairs.", example: "What's your new teacher like? / That sounds like the baby upstairs. I think he's crying." },
+      { category: "Make somebody/something + adj", structure: "That smell makes me hungry!", example: "That smell makes me hungry!" },
+      { category: "What time ...?", structure: "What time does the film start?", example: "What time does the film start?" },
+      { category: "What else/next?", structure: "What else shall I draw?", example: "What else shall I draw?" },
+      { category: "See you soon/later/tomorrow etc.", structure: "See you next week, Mrs Ball!", example: "See you next week, Mrs Ball!" },
+      { category: "Be made of", structure: "The toy is made of wood.", example: "The toy is made of wood." },
+    ],
+  },
+];
+
+// ── THEMATIC VOCABULARY LISTS (Handbook 2024, pages 79-84) ──────────────────
+
+export type ThematicVocab = {
+  theme: string;
+  starters: string[];
+  movers: string[];
+  flyers: string[];
+};
+
+export const thematicVocabLists: ThematicVocab[] = [
+  {
+    theme: "Animals",
+    starters: ["animal", "bear", "bee", "bird", "cat", "chicken", "cow", "crocodile", "dog", "donkey", "duck", "elephant", "fish", "frog", "giraffe", "goat", "hippo", "horse", "jellyfish", "lizard", "monkey", "mouse/mice", "pet", "polar bear", "sheep", "snake", "spider", "tail", "tiger", "zebra", "zoo"],
+    movers: ["bat", "cage", "dolphin", "fly", "kangaroo", "kitten", "lion", "panda", "parrot", "penguin", "puppy", "rabbit", "shark", "snail", "whale"],
+    flyers: ["beetle", "butterfly", "camel", "creature", "dinosaur", "eagle", "extinct", "fur", "insect", "nest", "octopus", "swan", "tortoise", "wild", "wing"],
+  },
+  {
+    theme: "The body and the face",
+    starters: ["arm", "body", "ear", "eye", "face", "foot/feet", "hair", "hand", "head", "leg", "mouth", "nose", "smile"],
+    movers: ["back", "beard", "blond(e)", "curly", "fair", "fat", "moustache", "neck", "shoulder", "stomach", "thin", "tooth/teeth"],
+    flyers: ["elbow", "finger", "knee", "toe"],
+  },
+  {
+    theme: "Clothes",
+    starters: ["bag", "baseball cap", "boots", "clothes", "dress", "glasses", "handbag", "hat", "jacket", "jeans", "shirt", "shoe", "shorts", "skirt", "sock", "trousers", "T-shirt", "wear"],
+    movers: ["coat", "helmet", "scarf", "sweater", "swimsuit"],
+    flyers: ["belt", "bracelet", "costume", "crown", "glove", "necklace", "pajamas", "pocket", "pyjamas", "ring", "spot", "spotted", "stripe", "striped", "sunglasses", "trainers", "umbrella", "uniform"],
+  },
+  {
+    theme: "Colours",
+    starters: ["black", "blue", "brown", "colour", "gray", "green", "grey", "orange", "pink", "purple", "red", "white", "yellow"],
+    movers: [],
+    flyers: ["gold", "silver", "spot", "spotted", "stripe", "striped"],
+  },
+  {
+    theme: "Family & friends",
+    starters: ["baby", "boy", "brother", "child/children", "classmate", "cousin", "dad", "family", "father", "friend", "girl", "grandfather", "grandma", "grandmother", "grandpa", "kid", "live", "man/men", "mother", "mum", "old", "person/people", "sister", "woman/women", "young"],
+    movers: ["aunt", "daughter", "granddaughter", "grandparent", "grandson", "grown-up", "parent", "son", "uncle"],
+    flyers: ["husband", "married", "surname", "wife"],
+  },
+  {
+    theme: "Food & drink",
+    starters: ["apple", "banana", "bean", "bread", "breakfast", "burger", "cake", "candy", "carrot", "chicken", "chips", "chocolate", "coconut", "dinner", "drink", "eat", "egg", "fish", "food", "fries", "fruit", "grape", "ice cream", "juice", "kiwi", "lemon", "lemonade", "lime", "lunch", "mango", "meat", "meatballs", "milk", "onion", "orange", "pea", "pear", "pie", "pineapple", "potato", "rice", "sausage", "sweet(s)", "tomato", "water", "watermelon"],
+    movers: ["bottle", "bowl", "cheese", "coffee", "cup", "glass", "hungry", "milkshake", "noodles", "pancake", "pasta", "picnic", "plate", "salad", "sandwich", "sauce", "soup", "tea", "thirsty", "vegetable"],
+    flyers: ["biscuit", "butter", "cereal", "chopsticks", "cookie", "flour", "fork", "honey", "jam", "knife", "meal", "olives", "pepper", "piece", "pizza", "salt", "smell", "snack", "spoon", "strawberry", "sugar", "taste", "yoghurt"],
+  },
+  {
+    theme: "Health",
+    starters: ["cold", "cough", "cry", "dentist", "doctor", "fall", "fine", "headache", "hospital", "ill", "matter", "nurse", "sick", "stomach-ache", "temperature", "tired", "toothache"],
+    movers: ["earache", "hurt"],
+    flyers: ["bandage", "chemist('s)", "cut", "fall over", "medicine", "x-ray"],
+  },
+  {
+    theme: "The home",
+    starters: ["apartment", "armchair", "bath", "bathroom", "bed", "bedroom", "bookcase", "box", "camera", "chair", "clock", "computer", "cupboard", "desk", "dining room", "doll", "door", "flat", "flower", "garden", "hall", "home", "house", "kitchen", "lamp", "living room", "mat", "mirror", "phone", "picture", "radio", "room", "rug", "sleep", "sofa", "table", "television/TV", "toy", "tree", "TV", "wall", "watch", "window"],
+    movers: ["address", "balcony", "basement", "blanket", "downstairs", "dream", "elevator", "floor", "internet", "lift", "message", "roof", "seat", "shower", "stair(s)", "toothbrush", "toothpaste", "towel", "upstairs", "wash"],
+    flyers: ["brush", "comb", "cooker", "cushion", "diary", "entrance", "envelope", "fridge", "gate", "key", "letter", "oven", "screen", "shampoo", "shelf", "soap", "stamp", "step", "swing", "telephone"],
+  },
+  {
+    theme: "Materials",
+    starters: ["paper"],
+    movers: ["card", "glass", "metal"],
+    flyers: ["gold", "plastic", "silver", "wood", "wool"],
+  },
+  {
+    theme: "Numbers",
+    starters: ["1–20"],
+    movers: ["21–100", "1st–20th", "hundred", "pair"],
+    flyers: ["101–1,000", "21st–31st", "million", "several", "thousand"],
+  },
+  {
+    theme: "Places & directions",
+    starters: ["behind", "between", "bookshop", "end", "here", "in", "in front of", "on", "park", "playground", "shop", "store", "street", "there", "under", "zoo"],
+    movers: ["above", "below", "building", "bus station", "bus stop", "café", "car park", "centre", "cinema", "circle", "circus", "city/town centre", "farm", "funfair", "hospital", "library", "map", "market", "near", "opposite", "place", "shopping centre", "sports centre", "square", "station", "straight", "supermarket", "swimming pool", "town"],
+    flyers: ["airport", "bank", "bridge", "castle", "chemist('s)", "club", "college", "corner", "east", "factory", "fire station", "front", "get to", "hotel", "kilometre", "left", "London", "middle", "museum", "north", "over", "path", "police station", "post office", "restaurant", "right", "skyscraper", "south", "stadium", "straight on", "theatre", "university", "way", "west"],
+  },
+  {
+    theme: "Sports & leisure",
+    starters: ["badminton", "ball", "baseball", "basketball", "bat", "beach", "bike", "boat", "book", "bounce", "camera", "catch", "doll", "draw", "drawing", "drive", "enjoy", "favourite", "fishing", "fly", "football", "game", "guitar", "hobby", "hockey", "jump", "kick", "kite", "listen", "music", "photo", "piano", "picture", "play", "radio", "read", "ride", "run", "sing", "skateboard", "skateboarding", "soccer", "song", "sport", "story", "swim", "table tennis", "take a photo", "television/TV", "tennis", "tennis racket", "throw", "toy", "TV", "walk", "watch"],
+    movers: ["band", "CD", "cinema", "comic", "comic book", "dance", "drive", "DVD", "email", "film", "fish", "go shopping", "goal", "holiday", "hop", "ice skates", "ice skating", "kick", "movie", "net", "party", "player", "pool", "practice", "practise", "present", "ride", "roller skates", "roller skating", "sail", "score", "skate", "skip", "sports centre", "swim", "swimming pool", "text", "towel", "video", "walk"],
+    flyers: ["backpack", "cartoon", "channel", "chess", "collect", "concert", "diary", "drum", "festival", "flashlight", "golf", "hotel", "instrument", "invitation", "join", "magazine", "match", "meet", "member", "online", "pop music", "prize", "programme", "puzzle", "pyramid", "quiz", "race", "rock music", "rucksack", "score", "ski", "sledge", "snowball", "snowboard", "snowboarding", "snowman", "stage", "suitcase", "swing", "team", "tent", "torch", "tune", "tyre", "umbrella", "violin", "volleyball", "winner"],
+  },
+  {
+    theme: "Time",
+    starters: ["afternoon", "birthday", "clock", "day", "evening", "in", "morning", "night", "today", "watch", "year"],
+    movers: ["after", "always", "before", "every", "never", "o'clock", "sometimes", "week", "weekend", "yesterday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    flyers: ["a.m.", "after", "ago", "autumn", "before", "calendar", "century", "date", "early", "end", "fall", "future", "hour", "how long", "late", "later", "midday", "midnight", "minute", "month", "p.m.", "past", "quarter", "spring", "summer", "time", "tomorrow", "tonight", "winter", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  },
+  {
+    theme: "Toys",
+    starters: ["alien", "ball", "balloon", "baseball", "basketball", "bike", "board game", "boat", "car", "doll", "football", "game", "helicopter", "lorry", "monster", "motorbike", "plane", "robot", "soccer", "teddy", "toy", "train", "truck"],
+    movers: ["model"],
+    flyers: [],
+  },
+  {
+    theme: "Transport",
+    starters: ["bike", "boat", "bus", "car", "drive", "fly", "go", "helicopter", "lorry", "motorbike", "plane", "ride", "run", "ship", "swim", "train", "truck"],
+    movers: ["bus station", "bus stop", "drive", "driver", "ride", "station", "ticket", "tractor", "trip"],
+    flyers: ["ambulance", "bicycle", "fire engine", "journey", "lift", "motorway", "passenger", "platform", "racing", "railway", "rocket", "spaceship", "taxi", "tour", "traffic", "wheel"],
+  },
+  {
+    theme: "Weather",
+    starters: ["sun"],
+    movers: ["cloud", "cloudy", "ice", "rain", "rainbow", "sky", "snow", "sunny", "weather", "wind", "windy"],
+    flyers: ["fog", "foggy", "storm"],
+  },
+  {
+    theme: "Work",
+    starters: ["teacher", "circus", "clown", "cook", "dentist", "doctor", "driver", "farmer", "film star", "hospital", "nurse", "pirate", "pop star", "work"],
+    movers: [],
+    flyers: ["actor", "airport", "ambulance", "artist", "astronaut", "business", "businessman/woman", "designer", "engineer", "factory", "fire engine", "fire fighter", "job", "journalist", "manager", "mechanic", "meeting", "news", "newspaper", "office", "photographer", "pilot", "police officer", "police station", "queen", "rocket", "singer", "taxi", "waiter"],
+  },
+  {
+    theme: "The world around us",
+    starters: ["beach", "sand", "sea", "shell", "street", "sun", "tree", "water"],
+    movers: ["building", "city", "country", "countryside", "field", "forest", "grass", "ground", "island", "lake", "leaf/leaves", "moon", "mountain", "plant", "river", "road", "rock", "sky", "star", "town", "village", "waterfall", "wave", "world"],
+    flyers: ["air", "bridge", "castle", "cave", "desert", "Earth", "entrance", "environment", "exit", "fire", "future", "hill", "land", "ocean", "planet", "pond", "space", "stone", "stream", "view", "wood"],
+  },
+];
+
+// ── CHỦ ĐỀ PICTURE BOOKS THEO TỪNG CẤP (Cambridge Picture Books 2018) ────────
+
+export type PictureBookTopic = {
+  level: string;
+  topics: { title: string; vocab: string[] }[];
+};
+
+export const pictureBookTopics: PictureBookTopic[] = [
+  {
+    level: "Pre A1 Starters",
+    topics: [
+      { title: "My body", vocab: ["leg", "hair", "body", "head", "ear", "eye", "face", "nose", "mouth", "smile", "arm", "hand", "foot", "feet"] },
+      { title: "At the zoo", vocab: ["hippo", "giraffe", "snake", "crocodile", "elephant", "spider", "dog", "tail", "animal", "mouse/mice", "tiger", "frog", "sheep", "monkey", "lizard", "goat", "duck", "chicken", "bird", "cow", "horse"] },
+      { title: "At the clothes shop", vocab: ["purple glasses", "brown bag", "black hat", "clothes", "blue jacket", "white skirt", "shoe", "sock", "pink handbag", "watch", "angry man", "grey trousers", "yellow shirt", "orange dress", "red T-shirt", "green jeans"] },
+      { title: "My friend's birthday", vocab: ["robot", "monster", "person", "men", "man", "people", "woman", "baby", "children", "child", "boy", "girl", "women", "give a toy", "balloon", "alien", "dad/father", "grandfather/grandpa", "grandmother/grandma", "family", "cousin", "sister", "brother", "mum/mother"] },
+      { title: "My favourite food", vocab: ["apple", "banana", "grapes", "fish", "beans", "egg", "milk", "tomato", "onion", "rice", "peas", "coconut", "breakfast", "dinner", "meat", "potato", "sausage", "orange", "lemon", "lime", "mango", "pear", "pineapple", "water", "fruit", "bread", "burger", "cake", "lunch", "candy", "carrot", "chips", "chocolate", "lemonade", "ice cream", "chicken", "watermelon", "drink", "juice"] },
+      { title: "At home", vocab: ["doll", "bath", "mirror", "bookcase", "chair", "table", "window", "picture", "kitchen", "clock", "box", "radio", "cupboard", "dining room", "apartment/flat", "house/home", "bedroom", "bed", "bathroom", "cat", "garden", "flower", "wall", "hall", "phone", "door", "lamp", "sofa", "painting", "rug", "television/TV", "armchair", "living room", "room"] },
+      { title: "At school", vocab: ["alphabet", "floor", "page", "letter", "class", "board", "pencil", "pen", "eraser/rubber", "ruler", "draw", "teacher", "classroom", "football/soccer", "hockey", "line", "part", "book", "basketball", "close", "open", "computer", "desk", "music", "tick", "cross", "keyboard", "mouse"] },
+      { title: "At the beach", vocab: ["guitar", "jump", "piano", "baseball", "hit a ball", "table tennis", "camera", "take a photo", "walk", "sing a song", "paint", "fishing", "kick a ball", "badminton", "tennis", "sport", "sand", "sea", "swim", "kite", "shell", "sun", "throw a ball", "catch a ball"] },
+      { title: "My street", vocab: ["street", "house", "shop", "lorry/truck", "plane", "helicopter", "motorbike", "bus", "car", "bike", "ball", "kite", "tree", "flower"] },
+    ],
+  },
+  {
+    level: "A1 Movers",
+    topics: [
+      { title: "A favourite toy shop", vocab: ["kitten", "tall clown", "bear", "pet puppy", "kangaroo", "dolphin", "rabbit", "lion", "pirate", "whale", "skates", "shark", "roof", "comic book", "farmer", "parrot", "panda", "cage"] },
+      { title: "The party", vocab: ["cup", "glass", "bowl", "grown-up", "plate", "fly", "cheese", "bottle", "quiet", "message", "blonde hair", "son", "grandson", "hide", "cry", "daughter", "granddaughter", "parent", "grandparent"] },
+      { title: "At the doctor's", vocab: ["doctor", "curly moustache", "earache", "back", "hurt", "shoulder", "better", "cold", "fat", "thin", "plant", "cough", "stomach", "teeth", "tooth", "headache", "neck", "nurse", "cup of tea"] },
+      { title: "Uncle Charlie's hotel", vocab: ["road", "address", "pool", "dry", "upstairs", "downstairs", "awake", "shower", "blanket", "wash", "elevator/lift", "first floor", "map", "call", "seat", "towel"] },
+      { title: "From the countryside to the jungle", vocab: ["ticket", "rock", "city", "island", "forest", "bus stop", "ground", "tractor", "driver", "sandwich", "salad", "mountain", "snow", "top", "cloud", "grass", "field", "jungle", "river", "skate", "town", "rainbow", "treasure", "bus station", "vegetable", "waterfall", "lake", "leaf/leaves", "plant"] },
+      { title: "The weather", vocab: ["snow", "windy", "wind", "storm", "cloudy", "sunny", "cloud", "rain"] },
+      { title: "Our town", vocab: ["straight", "square", "centre", "sports centre", "station", "market", "city centre", "café", "places", "drop", "supermarket", "shopping centre", "library", "carry", "circle", "slow"] },
+      { title: "Dreaming of holidays", vocab: ["dream", "holiday", "beach", "sand", "sea", "sun", "island", "boat", "fly", "plane", "helicopter"] },
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    topics: [
+      { title: "Meet the Flyers", vocab: ["dictionary", "letter", "flag", "stripe", "umbrella", "plastic", "sunglasses", "ring", "necklace", "striped", "shorts", "uniform", "spotted", "glove", "metal", "key", "pocket", "silver", "spot", "expensive", "rucksack", "bicycle", "telephone", "backpack", "belt"] },
+      { title: "Autumn/Fall", vocab: ["medicine", "fall over", "cut", "fridge", "chemist", "salt", "pepper", "meal", "honey", "jam", "burn", "piece", "pizza", "flour"] },
+      { title: "Flyers fun day", vocab: ["concert", "singer", "drum", "crown", "octopus", "violin", "instruments", "king", "queen", "stage", "actors", "artists"] },
+      { title: "Winter", vocab: ["snowman", "snowboarding", "chess", "married", "magazine", "calendar", "ski", "snowball", "skiing"] },
+      { title: "Flyers party", vocab: ["waiter", "delicious", "butter", "biscuits/cookies", "knife", "fork", "spoon", "chopsticks", "sugar"] },
+      { title: "Spring", vocab: ["swan", "wing", "insect", "butterfly", "bridge", "gate", "glass", "metal", "plastic", "wood", "nest"] },
+      { title: "Flyers adventure", vocab: ["cave", "fast", "backpack", "north", "south", "east", "west", "castle", "passenger", "taxi", "airport", "suitcase", "railway", "timetable", "tent", "hotel", "tour", "traffic", "desert", "pyramid", "camel", "museum"] },
+      { title: "Summer", vocab: ["postcard", "police officers", "envelope", "police station", "stamp", "factory", "mechanic", "fire station", "fire fighter", "fire engine", "ambulance", "office", "businessman", "businesswoman", "pilot", "astronaut", "rocket", "engineer"] },
+      { title: "Tomorrow is the A2 Flyers exam day", vocab: ["exam", "nervous", "excited", "ready", "timetable", "study", "prepare"] },
+    ],
+  },
+];
+
+// ── CAN DO SUMMARY (Handbook 2024, pages 9-10) ──────────────────────────────
+
+export type CanDoStatement = {
+  level: string;
+  skill: "Listening & Speaking" | "Reading & Writing";
+  statements: string[];
+};
+
+export const canDoStatements: CanDoStatement[] = [
+  {
+    level: "Pre A1 Starters",
+    skill: "Listening & Speaking",
+    statements: [
+      "CAN understand letters of the English alphabet when heard",
+      "CAN understand some simple spoken instructions given in short, simple phrases",
+      "CAN understand some simple spoken questions about self – such as name, age, favourite things or daily routine",
+      "CAN understand some very simple spoken descriptions of people – such as name, gender, age, mood, appearance or what they are doing",
+      "CAN understand some very simple spoken descriptions of everyday objects – such as how many, colour, size or location",
+      "CAN understand some very short conversations that use familiar questions and answers",
+      "CAN name some familiar people or things – such as family, animals, and school or household objects",
+      "CAN give very basic descriptions of some objects and animals – such as how many, colour, size or location",
+      "CAN respond to very simple questions with single words or a 'yes/no' response",
+    ],
+  },
+  {
+    level: "Pre A1 Starters",
+    skill: "Reading & Writing",
+    statements: [
+      "CAN read and understand some simple sentences, including questions",
+      "CAN follow some very short stories written in very simple language",
+      "CAN write the letters of the English alphabet",
+      "CAN write name using the English alphabet",
+      "CAN copy words, phrases and short sentences",
+      "CAN spell some very simple words correctly",
+    ],
+  },
+  {
+    level: "A1 Movers",
+    skill: "Listening & Speaking",
+    statements: [
+      "CAN understand very simple spoken dialogues about familiar topics with the help of pictures",
+      "CAN understand very simple spoken descriptions about people and objects",
+      "CAN express agreement or disagreement with someone using short, simple phrases",
+      "CAN respond to questions on familiar topics with simple phrases and sentences",
+      "CAN give simple descriptions of objects, pictures and actions",
+      "CAN tell a very simple story with the help of pictures",
+      "CAN ask someone how they are and ask simple questions about habits and preferences",
+    ],
+  },
+  {
+    level: "A1 Movers",
+    skill: "Reading & Writing",
+    statements: [
+      "CAN understand some simple signs and notices",
+      "CAN read and understand some short factual texts with the help of pictures",
+      "CAN read and understand some short, simple stories about familiar topics with the help of pictures",
+      "CAN write short, simple phrases and sentences about pictures and familiar topics",
+      "CAN write simple sentences giving personal details",
+      "CAN write short, simple sentences about likes and dislikes",
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    skill: "Listening & Speaking",
+    statements: [
+      "CAN understand instructions given in more than one sentence",
+      "CAN understand simple spoken descriptions of objects, people and events",
+      "CAN understand simple conversations on everyday topics",
+      "CAN ask basic questions about everyday topics",
+      "CAN tell short, simple stories using pictures or own ideas",
+      "CAN give simple descriptions of objects, pictures and actions",
+      "CAN talk briefly about activities done in the past",
+    ],
+  },
+  {
+    level: "A2 Flyers",
+    skill: "Reading & Writing",
+    statements: [
+      "CAN understand simple written descriptions of objects, people and events",
+      "CAN understand simple, short stories containing narrative tenses",
+      "CAN read and understand short texts, even if some words are unknown",
+      "CAN link phrases or sentences with connectors like 'and', 'because' and 'then'",
+      "CAN write simple descriptions of objects, pictures and actions",
+      "CAN write a short, simple story using pictures or own ideas",
+    ],
+  },
+];
+
+// ── NAMES THEO TỪNG CẤP (Wordlist 2025 — candidates must recognise & write) ─
+
+export const examNames: { level: string; names: string[] }[] = [
+  { level: "Pre A1 Starters", names: ["Alex", "Alice", "Ann/Anna", "Ben", "Bill", "Dan", "Eva", "Grace", "Hugo", "Jill", "Kim", "Lucy", "Mark", "Matt", "May", "Nick", "Pat", "Sam", "Sue", "Tom"] },
+  { level: "A1 Movers", names: ["Charlie", "Clare", "Daisy", "Fred", "Jack", "Jane", "Jim", "Julia", "Lily", "Mary", "Paul", "Peter", "Sally", "Vicky", "Zoe"] },
+  { level: "A2 Flyers", names: ["Betty", "David", "Emma", "Frank", "George", "Harry", "Helen", "Holly", "Katy", "Michael", "Oliver", "Richard", "Robert", "Sarah", "Sophia", "William"] },
+];
+
+// ── COLOURS cho bài Colouring (Listening Part 4/5) ──────────────────────────
+// Handbook 2024: Range of colours is: black, blue, brown, green, grey, orange, pink, purple, red, yellow
+
+export const examColours = [
+  "black", "blue", "brown", "green", "grey", "orange", "pink", "purple", "red", "yellow",
+] as const;
 
 
 export type ResourceLink = {

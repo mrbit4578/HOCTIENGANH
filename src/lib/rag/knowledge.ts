@@ -5,6 +5,8 @@
 import {
   lessons, levels, roadmap, weekPlan, parentRules, syllabus,
   coursebooks, examBooks, youtubeChannels, practicePlatforms,
+  examStructures, grammarLists, thematicVocabLists, pictureBookTopics,
+  canDoStatements, examNames, examColours,
   type Lesson,
 } from "@/data/curriculum";
 
@@ -194,6 +196,81 @@ function metaChunks(): Chunk[] {
     });
   });
 
+  // ── Dữ liệu chính thức từ Cambridge PDF (củng cố 08/2026) ──────────────
+
+  // Cấu trúc đề thi chính xác theo handbook
+  examStructures.forEach((es, i) => {
+    const partsDesc = es.parts.map(p => `Part ${p.part}: ${p.taskType} — ${p.description} (${p.questions} câu, ${p.marks} điểm)`).join(". ");
+    chunks.push({
+      id: `exam-struct-${i}`,
+      text: `Đề thi ${es.level} — ${es.paper} (${es.duration}): ${partsDesc}. Tổng ${es.totalMarks} điểm.`,
+      keywords: `${es.level} ${es.paper} đề thi cấu trúc exam structure ${es.duration}`,
+      source: { type: "exam" as const, label: `${es.level} ${es.paper}` },
+    });
+  });
+
+  // Grammar & structures list theo handbook
+  grammarLists.forEach((gl) => {
+    gl.items.forEach((item, i) => {
+      chunks.push({
+        id: `grammar-list-${gl.level}-${i}`,
+        text: `Ngữ pháp ${gl.level}: ${item.structure}. Ví dụ: ${item.example}`,
+        keywords: `${item.category} ${item.structure} ngữ pháp grammar ${gl.level}`,
+        source: { type: "grammar" as const, label: `${gl.level}: ${item.structure}` },
+      });
+    });
+  });
+
+  // Thematic vocabulary lists theo handbook
+  thematicVocabLists.forEach((tv) => {
+    chunks.push({
+      id: `thematic-${tv.theme}`,
+      text: `Từ vựng chủ đề "${tv.theme}": Starters: ${tv.starters.join(", ")}. Movers thêm: ${tv.movers.join(", ") || "(không thêm)"}. Flyers thêm: ${tv.flyers.join(", ") || "(không thêm)"}.`,
+      keywords: `${tv.theme} từ vựng thematic vocabulary chủ đề topic`,
+      source: { type: "vocab" as const, label: tv.theme },
+    });
+  });
+
+  // Picture book topics theo từng cấp
+  pictureBookTopics.forEach((pb) => {
+    pb.topics.forEach((topic, i) => {
+      chunks.push({
+        id: `picturebook-${pb.level}-${i}`,
+        text: `Chủ đề ${pb.level}: ${topic.title}. Từ vựng: ${topic.vocab.join(", ")}.`,
+        keywords: `${topic.title} ${pb.level} picture book chủ đề tranh topic`,
+        source: { type: "vocab" as const, label: `${pb.level}: ${topic.title}` },
+      });
+    });
+  });
+
+  // Can-do statements theo handbook
+  canDoStatements.forEach((cd, i) => {
+    chunks.push({
+      id: `cando-${i}`,
+      text: `Năng lực ${cd.level} — ${cd.skill}: ${cd.statements.join(". ")}.`,
+      keywords: `${cd.level} ${cd.skill} can do năng lực CEFR`,
+      source: { type: "exam" as const, label: `${cd.level} ${cd.skill}` },
+    });
+  });
+
+  // Names theo từng cấp
+  examNames.forEach((en) => {
+    chunks.push({
+      id: `names-${en.level}`,
+      text: `Tên trong đề thi ${en.level}: ${en.names.join(", ")}. Bé cần nhận biết và viết đúng các tên này.`,
+      keywords: `${en.level} names tên đề thi Cambridge`,
+      source: { type: "exam" as const, label: `Tên ${en.level}` },
+    });
+  });
+
+  // Màu dùng trong bài Colouring
+  chunks.push({
+    id: "exam-colours",
+    text: `10 màu dùng trong bài Colouring (Listening Part 4/5): ${examColours.join(", ")}. Bé cần biết đọc và tô đúng màu.`,
+    keywords: `colours màu colouring listening tô màu exam`,
+    source: { type: "exam" as const, label: "Màu Colouring" },
+  });
+
   return chunks;
 }
 
@@ -280,4 +357,8 @@ export const suggestedQuestions = [
   "Can và can't khác gì nhau?",
   "Mẹo luyện chính tả?",
   "Thi Cambridge ở đâu?",
+  "Đề thi Starters có mấy phần?",
+  "Ngữ pháp Movers có gì mới?",
+  "Từ vựng chủ đề Animals有哪些?",
+  "Flyers cần học ngữ pháp gì?",
 ];

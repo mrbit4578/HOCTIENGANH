@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { levels, roadmap, syllabus, weekPlan } from "@/data/curriculum";
+import { levels, roadmap, syllabus, weekPlan, canDoStatements } from "@/data/curriculum";
 
 export const Route = createFileRoute("/lo-trinh")({
   head: () => ({
@@ -41,6 +41,9 @@ function Roadmap() {
               </h2>
               <p className="text-sm text-muted-foreground">{r.time}</p>
               <p className="mt-2">{r.focus}</p>
+              {"books" in r && r.books && (
+                <p className="mt-2 text-sm font-semibold text-primary">📚 {r.books}</p>
+              )}
             </div>
             <p className="rounded-xl bg-success/15 p-3 text-sm font-semibold text-success">
               🎯 {r.output}
@@ -56,8 +59,11 @@ function Roadmap() {
             <h3 className="font-display text-xl font-bold">
               {lv.emoji} {lv.name}
             </h3>
+            <p className="mt-1 text-xs font-bold text-primary">CEFR {lv.cefr}</p>
             <p className="mt-2 text-sm">{lv.exam}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{lv.totalItems}</p>
             <p className="mt-2 text-sm text-muted-foreground">Vốn từ cộng dồn: {lv.words}</p>
+            <p className="mt-2 rounded-lg bg-muted/60 p-2 text-xs">{lv.canDo}</p>
           </div>
         ))}
       </div>
@@ -99,6 +105,31 @@ function Roadmap() {
             <p className="mt-1 text-xs font-semibold text-muted-foreground">{d.skill}</p>
           </div>
         ))}
+      </div>
+
+      <h2 className="mt-12 font-display text-3xl font-bold">🎯 Bé có thể làm gì sau mỗi cấp?</h2>
+      <p className="mt-2 text-muted-foreground">
+        Năng lực đạt được theo khung CEFR, trích từ Handbook for Teachers 2024 của Cambridge.
+      </p>
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        {canDoStatements.map((cd, i) => {
+          const lv = levels.find((l) => l.name === cd.level);
+          return (
+            <div key={i} className="card-pop p-5">
+              <h3 className="font-display text-lg font-bold">
+                {lv?.emoji} {cd.level} — {cd.skill}
+              </h3>
+              <ul className="mt-3 space-y-1.5">
+                {cd.statements.map((s, j) => (
+                  <li key={j} className="flex gap-2 text-sm">
+                    <span className="text-success">✓</span>
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </main>
   );

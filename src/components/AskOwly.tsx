@@ -111,11 +111,12 @@ export function AskOwly() {
       const results = retrieve(q, 5);
       const localAnswer = composeAnswer(q, results);
 
-      // 2. Try LLM if status is not "off"
+      // 2. Try LLM — ALWAYS call when available, even if RAG didn't find an answer
+      //    This fixes the "không biết" issue: when RAG fails, LLM can still answer
       let finalAnswer = localAnswer;
       let isLlm = false;
 
-      if (llmStatus !== "off" && !localAnswer.corrective) {
+      if (llmStatus !== "off") {
         try {
           const context = results.slice(0, 3).map(r => r.chunk.text).join("\n\n");
           const llmResult = await askLlm({ data: { question: q, context } });
@@ -125,10 +126,17 @@ export function AskOwly() {
           } else if (llmResult.mode === "llm") {
             setLlmStatus("on");
             isLlm = true;
+            // If RAG found a confident answer, enhance it with LLM
+            // If RAG failed (corrective), use LLM answer directly
             finalAnswer = {
               ...localAnswer,
-              text: `🤖 ${llmResult.text}`,
+              text: localAnswer.corrective
+                ? `🤖 ${llmResult.text}`
+                : `🤖 ${llmResult.text}`,
               speakText: extractFirstEnglish(llmResult.text) || localAnswer.speakText,
+              corrective: false,
+              // Keep RAG sources if they exist, otherwise empty
+              sources: localAnswer.sources,
             };
           } else {
             if (llmResult.mode === "error") setLlmError(llmResult.error);
